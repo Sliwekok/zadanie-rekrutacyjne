@@ -34,9 +34,9 @@ class CommentAPIController extends Controller
     public function update($id, Request $request){
         // validate request
         $validatedData = Validator::make($request->all(),[
-            'author'    => ['required', 'max:255', 'string'],
-            'post_id'   => ['required', 'max:255', 'string'],
-            'content'   => ['required', 'max:2048', 'string'],
+            'author'    => ['required', 'min:4', 'max:255', 'string'],
+            'post_id'   => ['required', 'min:1', 'max:255', 'string'],
+            'content'   => ['required', 'min:10', 'max:2048', 'string'],
         ]);
         // upon any validator fail return false 
         if($validatedData->fails()) return "bad data provided";

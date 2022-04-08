@@ -4,6 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Carbon\Carbon;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -15,42 +21,99 @@ class PostController extends Controller
 
     // find all posts
     public function showAll(){
-        $posts = Post::all()->paginate(30);
+        // fetch all posts from api
+        $url = $this->url . "post/";
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request("GET", $url);
+        $post = json_decode($response->getBody());
+        // transform json to collection to use paginator
+        $paginated = $this->paginate($post)->setPath('/post');
         return view('posts/index',[
-            'posts' => $posts,
+            'posts' => $paginated,
             'title' => "All posts"
         ]);
     }
 
     // show single post
     public function show($id){
-        $post = Post::find($id);
+        // fetch all posts from api
+        $url = $this->url . "post/". $id;
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request("GET", $url);
+        $post = json_decode($response->getBody());
+        // returned array gives 2 dimensional array - one for post data, second for post comments, 0 - post, 1 - comments
         return view('posts/post',[
-            'post' => $post,
-            'title'=> $post->title
+            'post' => $post[0],
+            'comments'=> $post[1],
+            'title'=> $post[0]->title,
         ]);
     }
 
-    // create post
+    // create post view
     public function create(){
         return view('posts/create',[
-            'post' => $post,
-            'title'=> "Create new post"
+            'title' => "Create new post"
         ]);
     }
 
-    // edit post
+    // send request to API to create a new post
+    public function createPost(Request $request){
+        $url = $this->url . "post/create";
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request("POST", $url, [
+            'form_params' => array(
+                'author'    => Auth::user()->name,
+                'title'     => $request->title,
+                'content'   => $request->content,
+            )
+        ]);
+        return redirect('post/');
+    }
+
+    // edit post view
     public function edit($id){
-        $post = Post::find($id);
+        // fetch all posts from api
+        $url = $this->url . "post/". $id;
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request("GET", $url);
+        $post = json_decode($response->getBody());
         return view('posts/create',[
             'post' => $post,
-            'title'=> "Create new post"
+            'title'=> "Edit post"
         ]);
     }
 
-    // get data from API and return json object
-    private function getAPIContent($url){
-        $json = json_decode(file_get_contents($url), true);
-        return $json;
+    // send request to API to edit a post
+    public function update($id){
+        $url = $this->url . "post/$id/update";
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request("POST", $url, [
+            'form_params' => array(
+                'author'    => Auth::user()->name,
+                'title'     => $request->title,
+                'content'   => $request->content,
+            )
+        ]);
+        return redirect("post/$id");
+    }
+
+    // add comment to current
+    public function addComment($id, Request $request){
+        $url = $this->url . "post/$id/comment";
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request("POST", $url, [
+            'form_params' => array(
+                'author'    => Auth::user()->name,
+                'post_id'   => $id,
+                'content'   => $request->content,
+            )
+        ]);
+        return back();
+    }
+    // transform json data to paginated collection
+    private function paginate($items, $perPage = 30, $page = null, $options = []){
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 }

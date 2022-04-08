@@ -72,9 +72,9 @@ class PostAPIController extends Controller
     public function addComment($id, Request $request){
         // validate data
         $validatedData = Validator::make($request->all(),[
-            'author'    => ['required', 'max:255', 'string'],
-            'post_id'   => ['required', 'max:32', 'integer'],
-            'content'   => ['required', 'max:2048', 'string'],
+            'author'    => ['required', 'min:4', 'max:255', 'string'],
+            'post_id'   => ['required', 'min:1', 'max:32', 'integer'],
+            'content'   => ['required', 'min:1', 'max:2048', 'string'],
         ]);
         // create Comment model
         $comment = new Comment;
@@ -90,9 +90,9 @@ class PostAPIController extends Controller
     // validate request parameters
     private function validateRequest($data){
         $validatedData = Validator::make($data->all(),[
-            'author'    => ['required', 'max:255', 'string'],
-            'title'     => ['required', 'max:255', 'string'],
-            'content'   => ['required', 'max:2048', 'string'],
+            'author'    => ['required', 'min:4', 'max:255', 'string'],
+            'title'     => ['required', 'min:10', 'max:255', 'string'],
+            'content'   => ['required', 'min:10', 'max:2048', 'string'],
         ]);
         // upon any validator fail return false 
         if($validatedData->fails()) return false;

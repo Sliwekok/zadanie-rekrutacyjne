@@ -32392,6 +32392,74 @@ select {
   content: none;
 }
 
+nav.navbar{
+  padding: 2vh;
+  background-color: rgb(118, 178, 255);
+  color: white;
+  font-size: 1.15rem;
+  margin-bottom: 5vh;
+}
+
+/* all posts showed in index */
+
+.posts span.title{
+  font-size: 1.2rem;
+  font-weight: bolder;
+}
+
+.posts span.author{
+  font-size: 0.8rem;
+  font-weight: lighter;
+}
+
+.posts > div{
+  margin-top: 1vh;
+  border-bottom: 1px rgb(194, 194, 194) solid;
+}
+
+.posts{
+  padding: 0.75vh;
+}
+
+/* single post */
+
+#post{
+  margin-top: 5vh;
+}
+
+#post #title{
+  font-size: 1.2rem;
+  font-weight: bolder;
+}
+
+/* comments section */
+
+#comments{
+  margin-top: 5vh;
+}
+
+.comment{
+  margin-top: 2vh;
+}
+
+.comment:first-child{
+  margin-top: 5vh;
+}
+
+.comment p.timestamp{
+  font-size: 0.8rem;
+  color: rgb(194, 194, 194);
+}
+
+.comment p.author{
+  color: rgb(118, 178, 255);
+  font-weight: bold;
+}
+
+.comment p.content{
+  text-indent: 2rem;
+}
+
 @media (min-width: 640px) {
   .sm\:container {
     width: 100%;

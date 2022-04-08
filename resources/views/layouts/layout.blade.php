@@ -28,6 +28,7 @@
 <div class="container-fluid">
 <div class="row">   
 
+    @include('components/nav')
     @yield('content')
 
 </div>
