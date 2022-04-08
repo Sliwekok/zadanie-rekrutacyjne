@@ -25,6 +25,7 @@ class PostController extends Controller
         $url = $this->url . "post/";
         $client = new \GuzzleHttp\Client();
         $response = $client->request("GET", $url);
+        // transform to json format, on paginate function it returns to colletion format
         $post = json_decode($response->getBody());
         // transform json to collection to use paginator
         $paginated = $this->paginate($post)->setPath('/post');
@@ -43,9 +44,9 @@ class PostController extends Controller
         $post = json_decode($response->getBody());
         // returned array gives 2 dimensional array - one for post data, second for post comments, 0 - post, 1 - comments
         return view('posts/post',[
-            'post' => $post[0],
-            'comments'=> $post[1],
-            'title'=> $post[0]->title,
+            'post'      => $post[0],
+            'comments'  => $post[1],
+            'title'     => $post[0]->title,
         ]);
     }
 
@@ -68,33 +69,6 @@ class PostController extends Controller
             )
         ]);
         return redirect('post/');
-    }
-
-    // edit post view
-    public function edit($id){
-        // fetch all posts from api
-        $url = $this->url . "post/". $id;
-        $client = new \GuzzleHttp\Client();
-        $response = $client->request("GET", $url);
-        $post = json_decode($response->getBody());
-        return view('posts/create',[
-            'post' => $post,
-            'title'=> "Edit post"
-        ]);
-    }
-
-    // send request to API to edit a post
-    public function update($id){
-        $url = $this->url . "post/$id/update";
-        $client = new \GuzzleHttp\Client();
-        $response = $client->request("POST", $url, [
-            'form_params' => array(
-                'author'    => Auth::user()->name,
-                'title'     => $request->title,
-                'content'   => $request->content,
-            )
-        ]);
-        return redirect("post/$id");
     }
 
     // add comment to current

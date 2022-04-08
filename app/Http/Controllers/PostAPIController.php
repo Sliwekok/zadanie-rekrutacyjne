@@ -27,6 +27,7 @@ class PostAPIController extends Controller
     // fetch single post via id
     public function show($id){
         $post = Post::find($id);
+        if(!$post) return "No post found";
         $comments = Comment::where('post_id', $id)->get();
         return [$post, $comments];
     }
@@ -76,6 +77,7 @@ class PostAPIController extends Controller
             'post_id'   => ['required', 'min:1', 'max:32', 'integer'],
             'content'   => ['required', 'min:1', 'max:2048', 'string'],
         ]);
+        if($validatedData->fails()) return "Bad data provided";
         // create Comment model
         $comment = new Comment;
         // pass data

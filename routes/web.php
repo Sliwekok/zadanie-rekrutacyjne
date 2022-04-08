@@ -29,7 +29,7 @@ require __DIR__.'/auth.php';
 
 
 
-Route::prefix('post')->group(function(){
+Route::middleware(['auth'])->prefix('post')->group(function(){
     Route::get('/', [PostController::class, 'showAll']);
     Route::get('/create', [PostController::class, 'create']);
     Route::post('/createPost', [PostController::class, 'createPost']);
@@ -41,9 +41,9 @@ Route::prefix('post')->group(function(){
         Route::post('/comment', [PostController::class, 'addComment']);
     });
 
-})->middleware('auth');
+});
 
-Route::prefix('comment')->group(function(){
+Route::middleware(['auth'])->prefix('comment')->group(function(){
     Route::get('/', [CommentController::class, 'showAll']);
 
     Route::prefix('{id}')->group(function(){
@@ -52,7 +52,7 @@ Route::prefix('comment')->group(function(){
     });
 });
 
-Route::prefix('user')->group(function(){
+Route::middleware(['auth'])->prefix('user')->group(function(){
     Route::get('/', [UserController::class, 'index']);
 
     Route::delete('/{id}/delete', [UserController::class, 'delete']);
