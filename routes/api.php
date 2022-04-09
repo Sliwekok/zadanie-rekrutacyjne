@@ -22,7 +22,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::prefix('post')->group(function(){
     Route::get('/', [PostAPIController::class, 'showAll']);
-    Route::post('/create', [PostAPIController::class, 'create']);
+    Route::post('create', [PostAPIController::class, 'create']);
     
     Route::prefix('{id}')->group(function(){
         Route::get('/', [PostAPIController::class, 'show']);
@@ -30,7 +30,6 @@ Route::prefix('post')->group(function(){
         Route::patch('/update', [PostAPIController::class, 'update']);
         Route::delete('/delete', [PostAPIController::class, 'delete']);
     });
-
 });
 
 Route::prefix('comment')->group(function(){
@@ -41,5 +40,4 @@ Route::prefix('comment')->group(function(){
         Route::patch('/update', [CommentAPIController::class, 'update']);
         Route::delete('/delete', [CommentAPIController::class, 'delete']);
     });
-
 });

@@ -99,6 +99,14 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        // here is custom logging provider for api 
+        'api' => [
+            'driver' => 'single',
+            'tap' => [App\Logging\CustomizeFormatter::class],
+            'path' => storage_path('logs/api.log'),
+            'level' => 'debug',
+        ]
     ],
 
 ];

@@ -3,6 +3,8 @@
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +21,7 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
+// create user command
 Artisan::command('createUser', function(){
     $name       = $this->ask("Username");
     $email      = $this->ask("Email");
@@ -31,5 +34,28 @@ Artisan::command('createUser', function(){
             'password'  => Hash::make($password),
         ]);
         $this->info("Account created for $name");
+    }
+});
+
+// api calls counter
+Artisan::command('apiCounter', function(){
+    // find file
+    $logFile = storage_path("logs/api.log");
+    if(File::exists($logFile)){
+        // open file and read untill eof
+        $file = fopen($logFile, 'r');
+        // go back by 13 hours and 33 minuts, but since Carbon is in different timezone, we need to go back by 11 hours in fact
+        $pastTime = Carbon::parse(Carbon::now()->subMinutes(33)->subHours(11)->format('Y-m-d H:i:s'));
+        $total = 0;
+        while(!feof($file)){
+            // transform line to json format
+            $line = fgets($file);
+            $json = json_decode($line, true);
+            $req = Carbon::parse($json['time']);
+            echo "$req | $pastTime \n";
+            // check if current line timestamp is between now or past time and increment the total number of requests
+            if($req->greaterThan($pastTime)) $total++;
+        }
+        $this->info("Total requests done in 13 hours 33 minutes time is: $total");
     }
 });

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Models\Comment;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class CommentAPIController extends Controller
 {
@@ -17,7 +19,17 @@ class CommentAPIController extends Controller
      * 
      */
 
-
+    // create logs to count api calls
+    public function __construct(Request $request){
+        $data = [
+            'url'   => $request->getUri(),
+            'method'=> $request->getMethod(),
+            'time'  => Carbon::now()->addHours(2)->format('Y-m-d H:i:s'), // add 2 hours bc of timezone
+            'body'  => $request->all(),
+        ];
+        Log::channel('api')->info('Post', $data);
+    }
+    
     // show all comments
     public function showAll(){
         $comments = Comment::all();

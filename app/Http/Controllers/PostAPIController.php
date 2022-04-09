@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class PostAPIController extends Controller
 {
@@ -18,6 +20,18 @@ class PostAPIController extends Controller
      * 
      */
 
+
+    // create logs to count api calls
+    public function __construct(Request $request){
+        $data = [
+            'url'   => $request->getUri(),
+            'method'=> $request->getMethod(),
+            'time'  => Carbon::now()->addHours(2)->format('Y-m-d H:i:s'), // add 2 hours bc of timezone
+            'body'  => $request->all(),
+        ];
+        Log::channel('api')->info('Post', $data);
+    }
+
     // default controller view, showing all posts
     public function showAll(){
         $posts = Post::all();
@@ -27,6 +41,7 @@ class PostAPIController extends Controller
     // fetch single post via id
     public function show($id){
         $post = Post::find($id);
+        // check if post exists
         if(!$post) return "No post found";
         $comments = Comment::where('post_id', $id)->get();
         return [$post, $comments];
