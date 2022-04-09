@@ -4,6 +4,8 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Jobs\AddPost;
+use App\Jobs\AddComment;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,7 +26,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // create post everyday 
+        $schedule->job(new AddPost)->daily();
+        // create comment every 36 minutes
+        $schedule->job(new AddComment)->cron('*/36 * * * *');;
     }
 
     /**

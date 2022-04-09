@@ -44,15 +44,15 @@ Artisan::command('apiCounter', function(){
     if(File::exists($logFile)){
         // open file and read untill eof
         $file = fopen($logFile, 'r');
-        // go back by 13 hours and 33 minuts, but since Carbon is in different timezone, we need to go back by 11 hours in fact
-        $pastTime = Carbon::parse(Carbon::now()->subMinutes(33)->subHours(11)->format('Y-m-d H:i:s'));
+        // go back by 13 hours and 33 minuts
+        $pastTime = Carbon::parse(Carbon::now()->subMinutes(33)->subHours(13)->format('Y-m-d H:i:s'));
+        dd(Carbon::now());
         $total = 0;
         while(!feof($file)){
             // transform line to json format
             $line = fgets($file);
             $json = json_decode($line, true);
             $req = Carbon::parse($json['time']);
-            echo "$req | $pastTime \n";
             // check if current line timestamp is between now or past time and increment the total number of requests
             if($req->greaterThan($pastTime)) $total++;
         }

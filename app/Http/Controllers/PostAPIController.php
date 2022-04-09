@@ -26,7 +26,7 @@ class PostAPIController extends Controller
         $data = [
             'url'   => $request->getUri(),
             'method'=> $request->getMethod(),
-            'time'  => Carbon::now()->addHours(2)->format('Y-m-d H:i:s'), // add 2 hours bc of timezone
+            'time'  => Carbon::now()->format('Y-m-d H:i:s'),
             'body'  => $request->all(),
         ];
         Log::channel('api')->info('Post', $data);
