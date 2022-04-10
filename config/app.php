@@ -1,6 +1,9 @@
 <?php
 
 return [
+    
+    // API access url to access posts data
+    'API_URL' => env('API_URL', 'localhost'),
 
     /*
     |--------------------------------------------------------------------------

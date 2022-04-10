@@ -26,7 +26,7 @@ class AddComment implements ShouldQueue
 
     public $url;    
     public function __construct(){
-        $this->url = 'http://zadanie.test/api/';
+        $this->url = env('API_URL');
     }
 
     /**

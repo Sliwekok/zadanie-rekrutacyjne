@@ -15,7 +15,9 @@ class PostController extends Controller
 
     public $url;    
     public function __construct(){
-        $this->url = 'http://zadanie.test/api/';
+        $this->url = env('API_URL');
+        dd($this->url);
+
     }
 
     // find all posts
