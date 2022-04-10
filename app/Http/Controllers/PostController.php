@@ -40,11 +40,13 @@ class PostController extends Controller
         $url = $this->url . "post/". $id;
         $client = new \GuzzleHttp\Client();
         $response = $client->request("GET", $url);
-        $post = json_decode($response->getBody());
+        // paginate comments on single post, set path to post
         // returned array gives 2 dimensional array - one for post data, second for post comments, 0 - post, 1 - comments
+        $post = json_decode($response->getBody());
+        $comments = $this->paginate($post[1])->setPath("/post/$id");
         return view('posts/post',[
             'post'      => $post[0],
-            'comments'  => $post[1],
+            'comments'  => $comments,
             'title'     => $post[0]->title,
         ]);
     }

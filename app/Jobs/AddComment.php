@@ -49,7 +49,7 @@ class AddComment implements ShouldQueue
         $client->request("POST", $url, [
             'form_params' => array(
                     'post_id'   => $id,
-                    'content'   => $faker->text,
+                    'content'   => "tak",
                     'author'    => $faker->name,
             )
         ]);
