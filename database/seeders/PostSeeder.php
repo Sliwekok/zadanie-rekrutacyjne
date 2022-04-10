@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Facades\Str;
+use App\Models\Post;
+use Illuminate\Support\Str;
 use Faker\Factory as Faker;
 
 class PostSeeder extends Seeder
@@ -18,11 +18,13 @@ class PostSeeder extends Seeder
     {
         $faker = Faker::create();
         for ($i=0; $i < 50; $i++){ 
-            DB::table('post')->insert([
-                'title' => Str::random(15),
-                'content'=> $faker->text,
-                'author'=> $faker->name,
-            ]);
+            $post = new Post;
+            // pass data
+            $post->author   = $faker->name;
+            $post->title    = Str::random(15);
+            $post->content  = $faker->text;
+            // save in db
+            $post->save();
         }
     }
 }

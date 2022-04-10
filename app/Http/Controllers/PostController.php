@@ -85,6 +85,45 @@ class PostController extends Controller
         ]);
         return back();
     }
+
+    // show edit view
+    // create post view
+    public function edit($id){
+        // fetch all posts from api
+        $url = $this->url . "post/". $id;
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request("GET", $url);
+        // returned array gives 2 dimensional array - one for post data, second for post comments, 0 - post, 1 - comments
+        // but we need only posts
+        $post = json_decode($response->getBody());
+        return view("posts/edit",[
+            'post'      => $post[0],
+            'title'     => $post[0]->title,
+        ]);
+    }
+
+    // send request to API to update post
+    public function update($id, Request $request){
+        $url = $this->url . "post/$id/update";
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request("POST", $url, [
+            'form_params' => array(
+                'author'    => Auth::user()->name,
+                'title'     => $request->title,
+                'content'   => $request->content,
+            )
+        ]);
+        return redirect("post/$id");
+    }
+
+    // send request to API to delete post
+    public function delete($id){
+        $url = $this->url . "post/$id/delete";
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request("DELETE", $url);
+        return redirect("post");
+    }
+
     // transform json data to paginated collection
     private function paginate($items, $perPage = 30, $page = null, $options = []){
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);

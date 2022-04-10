@@ -37,18 +37,16 @@ Route::middleware(['auth'])->prefix('post')->group(function(){
     Route::prefix('{id}')->group(function(){
         Route::get('/', [PostController::class, 'show']);
         Route::get('/edit', [PostController::class, 'edit']);
-        Route::patch('/update', [PostController::class, 'update']);
+        Route::post('/update', [PostController::class, 'update']);
         Route::post('/comment', [PostController::class, 'addComment']);
+        Route::post('/delete', [PostController::class, 'delete']);
     });
 
 });
 
 Route::middleware(['auth'])->prefix('comment')->group(function(){
-    Route::get('/', [CommentController::class, 'showAll']);
-
     Route::prefix('{id}')->group(function(){
-        Route::get('/', [CommentController::class, 'show']);
-        Route::patch('/update', [CommentController::class, 'update']);
+        Route::delete('/delete', [CommentController::class, 'delete']);
     });
 });
 

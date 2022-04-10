@@ -22304,6 +22304,8 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 window.Alpine = alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"];
 alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].start();
 
+__webpack_require__(/*! ./post */ "./resources/js/post.js");
+
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":
@@ -22335,6 +22337,22 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/post.js":
+/*!******************************!*\
+  !*** ./resources/js/post.js ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var form = document.querySelector('form');
+form.addEventListener('submit', function (event) {
+  if (confirm("Are you sure you want to delete this post?") == false) {
+    event.preventDefault();
+  }
+});
 
 /***/ }),
 

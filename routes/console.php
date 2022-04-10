@@ -46,7 +46,6 @@ Artisan::command('apiCounter', function(){
         $file = fopen($logFile, 'r');
         // go back by 13 hours and 33 minuts
         $pastTime = Carbon::parse(Carbon::now()->subMinutes(33)->subHours(13)->format('Y-m-d H:i:s'));
-        dd(Carbon::now());
         $total = 0;
         while(!feof($file)){
             // transform line to json format
