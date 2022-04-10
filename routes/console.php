@@ -24,8 +24,19 @@ Artisan::command('inspire', function () {
 // create user command
 Artisan::command('createUser', function(){
     $name       = $this->ask("Username");
+    // check if user exists
+    if(User::where('name', '=', $name)->exists()){
+        $this->error("Username already taken");
+        return;
+    }
     $email      = $this->ask("Email");
+    // check if email  exists
+    if(User::where('email', '=', $email)->exists()){
+        $this->error("Email already taken");
+        return;
+    }
     $password   = $this->secret("Password");
+
 
     if($this->confirm("Do you confirm this data? \n Username: $name \n Email: $email", true)){
         User::query()->create([
@@ -34,6 +45,7 @@ Artisan::command('createUser', function(){
             'password'  => Hash::make($password),
         ]);
         $this->info("Account created for $name");
+        return;
     }
 });
 
